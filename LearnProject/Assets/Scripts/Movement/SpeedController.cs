@@ -5,8 +5,6 @@ namespace LearnProject.Movement
 {
     public class SpeedController : MonoBehaviour
     {
-        [SerializeField]
-        private float _speedBoost = 1f;
 
         private bool BonusActive = false;
 
@@ -22,7 +20,7 @@ namespace LearnProject.Movement
         void Start()
         {
             characterMovement = GetComponent<CharacterMovementController>();
-            originalSpeed = characterMovement._speed;
+            originalSpeed = characterMovement.speed;
         }
 
 
@@ -36,8 +34,7 @@ namespace LearnProject.Movement
                 if (bonusTimerSec >= bonusDuration)
                 {
                     BonusActive = false;
-                    Debug.Log("BONUS DEACTIVATED");
-                    characterMovement._speed = originalSpeed;
+                    characterMovement.speed = originalSpeed;
                 }
 
             }
@@ -46,15 +43,12 @@ namespace LearnProject.Movement
         }
 
 
-        public void SetBonus(SpeedBonus Bonus, CharacterMovementController characterMovementController)
+        public void SetBonus(SpeedBonus Bonus)
         {
             BonusActive = true;
-            Debug.Log("BONUSACTIVE");
             bonusTimerSec = 0;
             bonusDuration = Bonus.ModifierTimer;
-            Debug.Log(bonusDuration);
-            characterMovementController._speed *= Bonus.SpeedModifier;
-            Debug.Log(characterMovementController._speed);
+            characterMovement.speed *= Bonus.SpeedModifier;
 
         }
     }
