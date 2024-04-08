@@ -1,7 +1,8 @@
-﻿using UnityEditor;
+﻿using LearnProject.PickUp;
+using UnityEditor;
 using UnityEngine;
 
-namespace LearnProject.PickUp
+namespace LearnProject.Spawner
 {
     public class PickUpSpawner : MonoBehaviour
     {
@@ -29,9 +30,8 @@ namespace LearnProject.PickUp
             {
                 _currentSpawnTimerSeconds += Time.deltaTime;
 
-                var spawnIntervalSeconds = RandomInterval(_spawnMinIntervalSeconds, _spawnMaxIntervalSeconds);
 
-                if (_currentSpawnTimerSeconds > spawnIntervalSeconds)
+                if (_currentSpawnTimerSeconds > RandomInterval(_spawnMinIntervalSeconds, _spawnMaxIntervalSeconds))
                 {
                     _currentSpawnTimerSeconds = 0f;
                     _currentCount++;

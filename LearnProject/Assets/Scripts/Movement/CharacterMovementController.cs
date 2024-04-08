@@ -8,7 +8,7 @@ namespace LearnProject.Movement
         private static readonly float SqrEpsilon = Mathf.Epsilon*Mathf.Epsilon;
 
         [SerializeField]
-        public float _speed = 1f;
+        public float speed = 1.5f;
         [SerializeField]
         private float _maxRadiusDelta = 10f;
         
@@ -33,7 +33,7 @@ namespace LearnProject.Movement
 
         private void Translate() {
 
-            var delta = MovementDirection * _speed * Time.deltaTime;
+            var delta = MovementDirection * speed * Time.deltaTime;
             _characterController.Move(delta);
         }
 

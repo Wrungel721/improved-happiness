@@ -9,7 +9,7 @@ namespace LearnProject.Shooting
         public Vector3 TargetPosition => _target.transform.position;
 
 
-        private Weapon _weapon;
+        public Weapon weapon { get; private set; }
 
         private Collider[] _colliders = new Collider[2];
         private float _nextShotTimerSec;
@@ -24,19 +24,19 @@ namespace LearnProject.Shooting
             if (_nextShotTimerSec < 0 )
             {
                 if (HasTarget)
-                    _weapon.Shoot(TargetPosition);
+                    weapon.Shoot(TargetPosition);
 
-                _nextShotTimerSec = _weapon.ShootFrequencySec;
+                _nextShotTimerSec = weapon.ShootFrequencySec;
             }
         }
 
         public void SetWeapon( Weapon weaponPrefab, Transform hand)
         {
-            if (_weapon != null)
-                Destroy(_weapon.gameObject);
-            _weapon = Instantiate(weaponPrefab, hand);
-            _weapon.transform.localPosition = Vector3.zero;
-            _weapon.transform.localRotation = Quaternion.identity;
+            if (weapon != null)
+                Destroy(weapon.gameObject);
+            weapon = Instantiate(weaponPrefab, hand);
+            weapon.transform.localPosition = Vector3.zero;
+            weapon.transform.localRotation = Quaternion.identity;
 
 
         
@@ -46,8 +46,8 @@ namespace LearnProject.Shooting
         {
             GameObject target = null;
 
-            var position = _weapon.transform.position;
-            var radius = _weapon.ShootRadius;
+            var position = weapon.transform.position;
+            var radius = weapon.ShootRadius;
             var mask = LayerUtils.EnemyMask;
 
             var size = Physics.OverlapSphereNonAlloc(position, radius, _colliders, mask);

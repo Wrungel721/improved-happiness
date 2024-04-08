@@ -3,6 +3,7 @@ using LearnProject.PickUp;
 using LearnProject.Items;
 using LearnProject.Shooting;
 using UnityEngine;
+using System;
 
 namespace LearnProject
 {
@@ -11,47 +12,47 @@ namespace LearnProject
     public abstract class BaseCharacter : MonoBehaviour
     {
         [SerializeField]
-        private Weapon _baseWeaponPrefab;
+        public Weapon baseWeaponPrefab;
 
         [SerializeField]
-        private Transform _hand;
+        public Transform hand;
 
+        public bool weaponChanged = false;
 
         [SerializeField]
-        private float _health = 2f;
+        public float health { get; private set; } = 5f;
 
-        public CharacterMovementController _characterMovementController;
-
+        public CharacterMovementController characterMovementController { get; private set; }
         private IMovementDirectionSource _movementDirectionSource;
-        private ShootingController _shootingController;
+        public ShootingController shootingController { get; private set; }
         private SpeedController _speedController;
 
         private void Awake()
         {
-            _characterMovementController = GetComponent<CharacterMovementController>();
+            characterMovementController = GetComponent<CharacterMovementController>();
             _movementDirectionSource = GetComponent<IMovementDirectionSource>();
-            _shootingController = GetComponent<ShootingController>();
+            shootingController = GetComponent<ShootingController>();
             _speedController = GetComponent<SpeedController>();
         }
 
         protected private void Start()
         {
-            SetWeapon(_baseWeaponPrefab);
+            SetWeapon(baseWeaponPrefab);
         }
 
         void Update()
         {
             var direction = _movementDirectionSource.MovementDirection;
             var visionDirection = direction;
-            if (_shootingController.HasTarget)
-                visionDirection = (_shootingController.TargetPosition - transform.position).normalized; 
+            if (shootingController.HasTarget)
+                visionDirection = (shootingController.TargetPosition - transform.position).normalized; 
 
 
-            _characterMovementController.MovementDirection = direction;
-            _characterMovementController.VisionDirection = visionDirection;
+            characterMovementController.MovementDirection = direction;
+            characterMovementController.VisionDirection = visionDirection;
 
 
-            if (_health<= 0f)
+            if (health<= 0f)
                 Destroy(gameObject);
         }
 
@@ -61,21 +62,14 @@ namespace LearnProject
             {
                 var bullet = other.gameObject.GetComponent<Bullet>();
 
-                _health -= bullet.Damage;
+                health -= bullet.Damage;
 
                 Destroy(other.gameObject);
             }
-            else if (LayerUtils.IsPickUp(other.gameObject))
+            else if (LayerUtils.IsPickUp(other.gameObject) || LayerUtils.IsPickUpBonus(other.gameObject)    )
             {
-                var pickUp = other.gameObject.GetComponent<PickUpWeapon>();
+                var pickUp = other.gameObject.GetComponent<PickUpItem>();
                 pickUp.PickUp(this);    
-
-                Destroy(other.gameObject);
-            }
-            else if (LayerUtils.IsPickUpBonus(other.gameObject))
-            {
-                var pickUp = other.gameObject.GetComponent<PickUpBonus>();
-                pickUp.PickUp(this);
 
                 Destroy(other.gameObject);
             }
@@ -83,12 +77,14 @@ namespace LearnProject
 
         public void SetWeapon(Weapon weapon)
         {
-            _shootingController.SetWeapon(weapon, _hand);
+            shootingController.SetWeapon(weapon, hand);
+            if (weapon != baseWeaponPrefab)
+                weaponChanged = true;
         }
 
         public void SetBonus(SpeedBonus bonus)
         {
-            _speedController.SetBonus(bonus, _characterMovementController);
+            _speedController.SetBonus(bonus);
         }
 
     }
