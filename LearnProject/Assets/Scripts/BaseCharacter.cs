@@ -3,7 +3,6 @@ using LearnProject.PickUp;
 using LearnProject.Items;
 using LearnProject.Shooting;
 using UnityEngine;
-using System;
 
 namespace LearnProject
 {
@@ -16,6 +15,9 @@ namespace LearnProject
 
         [SerializeField]
         public Transform hand;
+
+        [SerializeField]
+        private Animator _animator;
 
         public bool weaponChanged = false;
 
@@ -51,9 +53,17 @@ namespace LearnProject
             characterMovementController.MovementDirection = direction;
             characterMovementController.VisionDirection = visionDirection;
 
+            _animator.SetBool("IsMoving", direction != Vector3.zero);
+            _animator.SetBool("IsShooting", shootingController.HasTarget);
+            _animator.SetTrigger("Jump");
 
             if (health<= 0f)
-                Destroy(gameObject);
+            {
+                _animator.SetTrigger("Dead");
+                Destroy(gameObject, _animator.GetCurrentAnimatorClipInfo(0)[0].clip.length);
+            }
+            
+            
         }
 
         protected void OnTriggerEnter(Collider other)
