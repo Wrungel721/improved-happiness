@@ -9,7 +9,6 @@ namespace LearnProject.Enemy.States
         private readonly EnemyDirectionController _enemyDirectionController;
         private readonly EnemyCharacter _enemyCharacter;
         private Vector3 _currentPoint;
-        private float _escapeRadius = 10f;
 
         public EscapeState(EnemyTarget target, EnemyDirectionController enemyDirectionController, EnemyCharacter enemyCharacter)
         {
@@ -21,9 +20,8 @@ namespace LearnProject.Enemy.States
         public override void Execute()
         {
             Vector3 targetPosition = _target.Closest.transform.position;
-            targetPosition.x *= -1.0f;
-            targetPosition.z *= -1.0f;
-            targetPosition *= _escapeRadius;
+            targetPosition.x *= -0.1f;
+            targetPosition.z *= -0.1f;
 
             Debug.Log("ESCAPE");
 

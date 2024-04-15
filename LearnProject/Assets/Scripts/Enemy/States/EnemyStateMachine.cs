@@ -29,7 +29,7 @@ namespace LearnProject.Enemy.States
                     () => target.DistanceToClosestFromAgent() <= NavMeshTurnOffDistance),
                 new Transition(
                     escapeState,
-                    () => (enemyCharacter.health < enemyCharacter.toughnessGet)&&(rnd.Next(0, 100) < enemyCharacter._braveness) ),
+                    () => (enemyCharacter.health < enemyCharacter.boarderHealth)&&(rnd.Next(0, 100) < enemyCharacter._braveness) ),
             }) ;
 
             AddState(state: findWayState, transitions: new List<Transition>
@@ -49,7 +49,7 @@ namespace LearnProject.Enemy.States
                     () => target.DistanceToClosestFromAgent() > NavMeshTurnOffDistance),
                 new Transition(
                     escapeState,
-                    () => (enemyCharacter.health < enemyCharacter.toughnessGet)&&(rnd.Next(0, 100) < enemyCharacter._braveness)),
+                    () => (enemyCharacter.health < enemyCharacter.boarderHealth)&&(rnd.Next(0, 100) < enemyCharacter._braveness)),
                 new Transition(
                     idleState,
                     () => target.Closest == null)
